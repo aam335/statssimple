@@ -42,5 +42,5 @@ for cnt := 0; cnt < testsCnt; cnt++ { // run 10 goproc
 wg.Wait() 
 stats.Wait() // to make sure all the data from all the streams are processed
 // stats
-min, max, avg, cnt := stats.GetStatsNs() // get all results
+min, max, avg, cnt, dt := stats.GetStatsNs() // get all results
 ```
