@@ -17,7 +17,7 @@ func TestNew(t *testing.T) {
 		stats1.PushVal(v)
 	}
 
-	min, max, avg, cnt := stats1.GetStatsNs()
+	min, max, avg, cnt, _ := stats1.GetStatsNs()
 
 	require.Equal(t, int64(10), min, "min")
 	require.Equal(t, int64(50), max, "max")
@@ -26,12 +26,13 @@ func TestNew(t *testing.T) {
 
 	stats.Append(stats1)
 	stats.Wait()
-	min, max, avg, cnt = stats.GetStatsNs()
+	min, max, avg, cnt, _ = stats.GetStatsNs()
 
 	require.Equal(t, int64(10), min, "min")
 	require.Equal(t, int64(50), max, "max")
 	require.Equal(t, int64(30), avg, "avg")
 	require.Equal(t, int64(5), cnt, "cnt")
+
 }
 
 func TestRunOne(t *testing.T) {
@@ -55,7 +56,7 @@ func TestRunOne(t *testing.T) {
 	wg.Wait()
 	stats.Wait()
 	// stats
-	min, max, avg, cnt := stats.GetStatsNs()
+	min, max, avg, cnt, _ := stats.GetStatsNs()
 	ns := int64(dt.Nanoseconds())
 	require.LessOrEqual(t, ns, min, "min")
 	require.LessOrEqual(t, ns, max, "max<dt")

@@ -17,14 +17,14 @@ Usage:
 testsCnt := 10
 dt := time.Millisecond
 
-stats := NewStatsSimple() // main instance
+stats := statssimple.NewStatsSimple() // main instance
 
 wg := sync.WaitGroup{} // used for this test
 wg.Add(testsCnt)
 	
 for cnt := 0; cnt < testsCnt; cnt++ { // run 10 goproc
     go func() { 
-	    statsn := NewStatsSimple() // alloc local instance
+	    statsn := statssimple.NewStatsSimple() // alloc local instance
         defer statsn.Shutdown() // shutdown channel & read loop
         for ... { // 
 		    statsn.RunOne(func() { // meter function, not thread safe!

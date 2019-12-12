@@ -10,8 +10,9 @@ import (
 type StatsSimple struct {
 	unixNsStart,
 	max, min, sum, cnt, avg int64
-	logchan chan logchanStruct
-	wg      sync.WaitGroup
+	logchan   chan logchanStruct
+	wg        sync.WaitGroup
+	startTime time.Time
 }
 
 type logchanStruct struct{ min, max, sum, cnt int64 }
@@ -19,7 +20,7 @@ type logchanStruct struct{ min, max, sum, cnt int64 }
 // NewStatsSimple initializator for min & max values
 func NewStatsSimple() *StatsSimple {
 	ch := make(chan logchanStruct)
-	s := &StatsSimple{max: math.MinInt64, min: math.MaxInt64, logchan: ch}
+	s := &StatsSimple{max: math.MinInt64, min: math.MaxInt64, logchan: ch, startTime: time.Now()}
 	go func() {
 		for v := range ch {
 			if s.max < v.max {
@@ -73,11 +74,12 @@ func (s *StatsSimple) RunOne(f func()) {
 }
 
 // GetStatsNs calcs avg & return values
-func (s *StatsSimple) GetStatsNs() (min, max, avg, count int64) {
+func (s *StatsSimple) GetStatsNs() (min, max, avg, count int64, d time.Duration) {
 	if s.cnt > 0 {
 		s.avg = s.sum / s.cnt
 	}
-	return s.min, s.max, s.avg, s.cnt
+	d = time.Now().Sub(s.startTime)
+	return s.min, s.max, s.avg, s.cnt, d
 }
 
 // Wait .... waits for queue is empty
